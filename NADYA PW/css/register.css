@@ -1,0 +1,218 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+}
+
+.register-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* FOTO KIRI */
+
+.left {
+    width: 55%;
+
+    background-image: url("../image/registermobil.jpeg");
+
+    background-size: cover;
+    background-position: center;
+
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    color: white;
+
+    padding: 100px 70px;
+}
+
+.overlay h4 {
+    color: white;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 20px;
+}
+
+.overlay h1 {
+    font-size: 45px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+}
+
+.overlay p {
+    font-size: 16px;
+
+    line-height: 1.5;
+
+    max-width: 400px;
+}
+
+
+/* FORM KANAN */
+
+.right {
+    width: 45%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: white;
+}
+
+.register-box {
+    width: 80%;
+
+    max-width: 420px;
+}
+
+.register-box h2 {
+    font-size: 30px;
+
+    color: #101828;
+
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #667085;
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
+}
+
+
+/* INPUT */
+
+form {
+    display: flex;
+
+    flex-direction: column;
+}
+
+form label {
+    font-size: 12px;
+
+    font-weight: bold;
+
+    color: #344054;
+
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #d0d5dd;
+
+    border-radius: 8px;
+
+    margin-bottom: 13px;
+
+    outline: none;
+}
+
+input:focus {
+    border-color: #2563eb;
+}
+
+
+/* BUTTON */
+
+button {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-top: 8px;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+
+/* LOGIN */
+
+.login {
+    text-align: center;
+
+    margin-top: 20px;
+
+    font-size: 13px;
+
+    color: #667085;
+}
+
+.login a {
+    color: #2563eb;
+
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+    .register-container {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 100%;
+
+        height: 300px;
+    }
+
+    .right {
+        width: 100%;
+
+        padding: 40px 0;
+    }
+
+    .overlay {
+        padding: 60px 30px;
+    }
+
+    .overlay h1 {
+        font-size: 35px;
+    }
+}

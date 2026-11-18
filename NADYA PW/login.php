@@ -1,250 +1,177 @@
+
 <?php
 session_start();
+include 'koneksi.php';
 
 $error = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
-    $email = trim($_POST["email"] ?? "");
-    $password = $_POST["password"] ?? "";
+if (isset($_POST['login'])) {
 
-    if ($email === "" || trim($password) === "") {
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if ($email == "" || $password == "") {
+
         $error = "Email dan password wajib diisi!";
-    } else {
-        session_regenerate_id(true);
-        $_SESSION["nama"] = $email;
 
-        header("Location: dashboard.php");
-        exit;
+    } else {
+
+        $query = mysqli_prepare($koneksi,
+            "SELECT * FROM tb_pengguna WHERE email = ?"
+        );
+
+        mysqli_stmt_bind_param($query, "s", $email);
+        mysqli_stmt_execute($query);
+
+        $hasil = mysqli_stmt_get_result($query);
+
+        if (mysqli_num_rows($hasil) == 1) {
+
+            $data = mysqli_fetch_assoc($hasil);
+
+            if (password_verify($password, $data['password'])) {
+
+                session_regenerate_id(true);
+
+                $_SESSION['id_pengguna'] = $data['id_pengguna'];
+                $_SESSION['username'] = $data['nama'];
+                $_SESSION['nama'] = $data['nama'];
+                $_SESSION['email'] = $data['email'];
+                $_SESSION['role'] = $data['role'];
+
+                header("Location: dashboard.php");
+                exit;
+
+            } else {
+
+                $error = "Password yang kamu masukkan salah!";
+
+            }
+
+        } else {
+
+            $error = "Email belum terdaftar!";
+
+        }
     }
 }
 ?>
 
 <!DOCTYPE html>
-
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login - Automate</title>
 
-```
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        color: #172033;
-        background: white;
-        border-top: 5px solid #66c9c9;
-    }
-
-    .login-box {
-        width: 90%;
-        max-width: 520px;
-        margin: 35px auto;
-    }
-
-    h1 {
-        margin: 0 0 14px;
-        font-size: 36px;
-    }
-
-    .subtitle {
-        margin-bottom: 30px;
-        color: #64748b;
-        line-height: 1.7;
-    }
-
-    .form-group {
-        margin-bottom: 22px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 9px;
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-        width: 100%;
-        padding: 16px;
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
-        font-size: 16px;
-    }
-
-    .options {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 28px;
-    }
-
-    .remember {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .remember label {
-        margin: 0;
-    }
-
-    a {
-        color: #2864ed;
-        text-decoration: none;
-    }
-
-    .login-button {
-        width: 100%;
-        padding: 16px;
-        border: none;
-        border-radius: 10px;
-        background: #2864ed;
-        color: white;
-        font-size: 17px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .login-button:hover {
-        background: #1d4ed8;
-    }
-
-    .error {
-        padding: 12px;
-        margin-bottom: 20px;
-        background: #fee2e2;
-        color: #b91c1c;
-        border-radius: 8px;
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin: 25px 0;
-        color: #64748b;
-    }
-
-    .divider::before,
-    .divider::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: #d1d5db;
-    }
-
-    .google-button {
-        width: 100%;
-        padding: 14px;
-        border: 1px solid #cbd5e1;
-        border-radius: 10px;
-        background: white;
-        font-size: 15px;
-        cursor: pointer;
-    }
-
-    .register {
-        margin-top: 25px;
-        text-align: center;
-        color: #64748b;
-    }
-
-    @media (max-width: 480px) {
-        h1 {
-            font-size: 30px;
-        }
-    }
-</style>
-</head>
-
+    <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
 
-<main class="login-box">
+    <div class="login-container">
 
+        <div class="left">
 
-<main class="login-box">
+            <div class="overlay">
 
-    <h1>Login to Automate</h1>
+                <h4>WELCOME TO AUTOMATE</h4>
 
-    <p class="subtitle">
-        Selamat datang kembali! 👋<br>
-        Masuk untuk melanjutkan layanan.
-    </p>
+                <h1>Your Vehicle<br>In Good Hands</h1>
 
-    <?php if ($error !== ""): ?>
-        <div class="error">
-            <?php echo htmlspecialchars($error); ?>
-        </div>
-    <?php endif; ?>
+                <p>
+                    Masuk untuk melanjutkan layanan
+                    kendaraan terbaik untukmu.
+                </p>
 
-    <!-- FORM LOGIN HANYA SATU -->
-    <form action="login.php" method="POST">
+                <div class="features">
+                    <span>♡ Aman &amp; Terpercaya</span>
+                    <span>⚙ Layanan Profesional</span>
+                    <span>◷ Tersedia 24/7</span>
+                </div>
 
-        <div class="form-group">
-            <label for="email">Email atau Nomor Telepon</label>
-            <input
-                type="text"
-                id="email"
-                name="email"
-                placeholder="Masukkan email atau nomor telepon"
-                required
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Masukkan password"
-                required
-            >
-        </div>
-
-        <div class="options">
-            <div class="remember">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Ingat saya</label>
             </div>
 
-            <a href="#"
-               onclick="alert('Silakan hubungi admin untuk bantuan password.'); return false;">
-                Lupa password?
-            </a>
         </div>
 
-        <button type="submit" name="login" class="login-button">
-            Login →
-        </button>
+        <div class="right">
 
-    </form>
+            <div class="login-box">
 
-    <div class="divider">atau</div>
+                <h2>Login to Automate</h2>
 
-    <button
-        type="button"
-        class="google-button"
-        onclick="alert('Fitur login Google belum diaktifkan.');"
-    >
-        🌐 Login dengan Google
-    </button>
+                <p class="welcome">
+                    Selamat datang kembali! 👋<br>
+                    Masuk untuk melanjutkan layanan.
+                </p>
 
-    <p class="register">
-        Belum punya akun?
-        <a href="register.php">Register</a>
-    </p>
+                <?php if (!empty($error)) { ?>
+                    <p class="error">
+                        <?php echo htmlspecialchars($error); ?>
+                    </p>
+                <?php } ?>
 
-</main>
-```
+                <form action="" method="POST">
+
+                    <label for="email">Email</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Masukkan email kamu"
+                        required
+                    >
+
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Masukkan password"
+                        required
+                    >
+
+                    <div class="remember">
+
+                        <label class="remember-label">
+                            <input type="checkbox" name="remember">
+                            Ingat saya
+                        </label>
+
+                        <a href="forgot-password.php">
+                            Lupa password?
+                        </a>
+
+                    </div>
+
+                    <button type="submit" name="login" value="1">
+                        Login →
+                    </button>
+
+                </form>
+
+                <div class="or">
+                    <span>atau</span>
+                </div>
+
+                <button type="button" class="google">
+                    G &nbsp; Login dengan Google
+                </button>
+
+                <p class="register">
+                    Belum punya akun?
+                    <a href="register.php">Register</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </body>
 </html>
